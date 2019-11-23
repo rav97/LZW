@@ -1,9 +1,11 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 15
-VisualStudioVersion = 15.0.28307.329
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.29411.108
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LZW_Algorithm", "LZW_Algorithm\LZW_Algorithm.csproj", "{2DCB342B-83E2-4D52-A92D-280BD942E8D4}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LZW_UI", "LZW_UI\LZW_UI.csproj", "{620E4B6C-518F-4C44-8489-ECFD3148ACBA}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,6 +17,10 @@ Global
 		{2DCB342B-83E2-4D52-A92D-280BD942E8D4}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{2DCB342B-83E2-4D52-A92D-280BD942E8D4}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{2DCB342B-83E2-4D52-A92D-280BD942E8D4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{620E4B6C-518F-4C44-8489-ECFD3148ACBA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{620E4B6C-518F-4C44-8489-ECFD3148ACBA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{620E4B6C-518F-4C44-8489-ECFD3148ACBA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{620E4B6C-518F-4C44-8489-ECFD3148ACBA}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
