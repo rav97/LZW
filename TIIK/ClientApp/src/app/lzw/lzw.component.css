@@ -1,0 +1,14 @@
+.mat-radio-button {
+    margin-right: 16px;
+  }
+  
+.flex-box {
+  display: flex;
+  flex-direction: row;
+}
+
+.flex-item {
+  flex: 1 1 auto;
+  max-width: 50%;
+  margin: 5px;
+}

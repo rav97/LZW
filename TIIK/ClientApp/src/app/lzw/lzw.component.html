@@ -1,0 +1,20 @@
+<div>
+    <mat-radio-group [(ngModel)]="optionSelected" aria-label="Select an option">
+        <mat-radio-button checked value="encode">Compress</mat-radio-button>
+        <mat-radio-button value="decode">Decompress</mat-radio-button>
+    </mat-radio-group>
+    <button mat-stroked-button (click)="submit()">Submit</button>
+</div>
+<div *ngIf="optionSelected === 'encode'">
+    <p>Compression ratio: {{ compressionRatio$ | async | percent}}</p>
+    <p>Input length: {{ inputLength$ | async }}</p>
+    <p>Output length: {{ encodedLength$ | async }}</p>
+</div>
+<div class="flex-box">
+    <form [formGroup]="inputForm" class="flex-item">
+        <mat-form-field style="width: 100%;">
+          <textarea formControlName="input" matInput placeholder="Input"></textarea>
+        </mat-form-field>
+      </form>
+    <div class="flex-item">{{lzwResult$ | async}}</div>
+</div>

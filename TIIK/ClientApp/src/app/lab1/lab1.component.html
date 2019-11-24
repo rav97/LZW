@@ -1,0 +1,27 @@
+<form [formGroup]="inputForm">
+  <mat-form-field style="width: 100%;">
+    <textarea matInput formControlName="input" placeholder="Input"></textarea>
+  </mat-form-field>
+</form>
+<button mat-stroked-button (click)="submit()">Submit</button>
+
+<p>Entropy: {{ entropy$ | async }}</p>
+<table mat-table [dataSource]="presenceData$ | async" class="mat-elevation-z8">
+  <ng-container matColumnDef="letter">
+    <th mat-header-cell *matHeaderCellDef> Letter </th>
+    <td mat-cell *matCellDef="let element"> {{element.letter}} </td>
+  </ng-container>
+
+  <ng-container matColumnDef="count">
+    <th mat-header-cell *matHeaderCellDef> Count </th>
+    <td mat-cell *matCellDef="let element"> {{element.count}} </td>
+  </ng-container>
+
+  <ng-container matColumnDef="percentage">
+    <th mat-header-cell *matHeaderCellDef> Percentage </th>
+    <td mat-cell *matCellDef="let element"> {{element.percentage}} </td>
+  </ng-container>
+
+  <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+  <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+</table>
