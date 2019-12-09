@@ -8,7 +8,7 @@
 <div *ngIf="optionSelected === 'encode'">
     <p>Compression ratio: {{ compressionRatio$ | async | percent}}</p>
     <p>Input length: {{ inputLength$ | async }}</p>
-    <p>Output length: {{ encodedLength$ | async }}</p>
+    <p>Output length: {{ (encodedLength$ | async) * 2 }}</p>
 </div>
 <div class="flex-box">
     <form [formGroup]="inputForm" class="flex-item">

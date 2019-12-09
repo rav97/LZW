@@ -26,7 +26,7 @@ namespace TIIK.Controllers
 		{
 			var encoded = LZW.Encode(request.Data);
 			var inputLength = request.Data.Length;
-			var encodedLength = encoded.Count;
+			var encodedLength = encoded.Count * 2;
 
 			return new EncodeResponse
 			{

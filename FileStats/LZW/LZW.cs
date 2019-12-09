@@ -8,14 +8,8 @@ namespace FileStats.LZW
 		public static List<ushort> Encode(string txt)
 		{
 			//step 1
-			var dictionary = new Dictionary<string, ushort>();
-			ushort n = 0;
-
-			for (var i = 0; i < 256; i++)
-			{
-				dictionary.Add(((char)i).ToString(), n);
-				n++;
-			}
+			var dictionary = InitializeEncodeDictionary();
+			var n = Convert.ToUInt16(dictionary.Count);
 
 			//step 2
 			var c = txt[0].ToString();
@@ -32,6 +26,12 @@ namespace FileStats.LZW
 				}
 				else
 				{
+					if (result.Count == ushort.MaxValue)
+					{
+						dictionary = InitializeEncodeDictionary();
+						n = Convert.ToUInt16(dictionary.Count);
+					}
+
 					result.Add(dictionary[c]);
 					dictionary.Add(string.Concat(c, s), n);
 					n++;
@@ -46,14 +46,8 @@ namespace FileStats.LZW
 		public static string Decode(List<ushort> data)
 		{
 			//step 1
-			var dictionary = new Dictionary<ushort, string>();
-			ushort n = 0;
-
-			for (var i = 0; i < 256; i++)
-			{
-				dictionary.Add(n, ((char)i).ToString());
-				n++;
-			}
+			var dictionary = InitializeDecodeDictionary();
+			var n = Convert.ToUInt16(dictionary.Count);
 
 			//step 2
 			var pk = data[0];
@@ -67,6 +61,12 @@ namespace FileStats.LZW
 			{
 				var pc = dictionary[pk];
 				var k = data[i];
+
+				if (dictionary.Count == ushort.MaxValue)
+				{
+					dictionary = InitializeDecodeDictionary();
+					n = Convert.ToUInt16(dictionary.Count);
+				}
 				if (dictionary.ContainsKey(k))
 				{
 					dictionary.Add(n, string.Concat(pc + dictionary[k][0]));
@@ -82,6 +82,29 @@ namespace FileStats.LZW
 				pk = k;
 			}
 			return result;
+		}
+
+		private static IDictionary<string, ushort> InitializeEncodeDictionary()
+		{
+			var dictionary = new Dictionary<string, ushort>();
+			for (var i = 0; i < 256; i++)
+			{
+				dictionary.Add(((char)i).ToString(), Convert.ToUInt16(i));
+			}
+
+			return dictionary;
+		}
+
+		private static IDictionary<ushort, string> InitializeDecodeDictionary()
+		{
+			var dictionary = new Dictionary<ushort, string>();
+
+			for (var i = 0; i < 256; i++)
+			{
+				dictionary.Add(Convert.ToUInt16(i), ((char)i).ToString());
+			}
+
+			return dictionary;
 		}
 	}
 }
