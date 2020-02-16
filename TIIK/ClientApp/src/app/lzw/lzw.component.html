@@ -8,7 +8,11 @@
 <div *ngIf="optionSelected === 'encode'">
     <p>Compression ratio: {{ compressionRatio$ | async | percent}}</p>
     <p>Input length: {{ inputLength$ | async }}</p>
-    <p>Output length: {{ (encodedLength$ | async) * 2 }}</p>
+    <p >Output length: {{ (encodedLength$ | async) }}</p >
+</div>
+<div *ngIf="(elapsedTime$ | async) as time">
+    <p>Miliseconds: {{ time.totalMilliseconds}}</p>
+    <p>Seconds: {{ time.totalSeconds}}</p>
 </div>
 <div class="flex-box">
     <form [formGroup]="inputForm" class="flex-item">

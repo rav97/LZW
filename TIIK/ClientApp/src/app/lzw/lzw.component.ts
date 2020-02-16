@@ -27,6 +27,9 @@ export class LzwComponent implements OnInit {
   @Select(FileStatsState.compressionRatio)
   compressionRatio$: Observable<number>;
 
+  @Select(FileStatsState.elapsedTime)
+  elapsedTime$: Observable<any>;
+
   inputForm: FormGroup = new FormGroup({
     input: new FormControl(),
   });
@@ -34,6 +37,7 @@ export class LzwComponent implements OnInit {
   constructor(private store: Store) { }
 
   ngOnInit() {
+    this.store.select(FileStatsState.elapsedTime).subscribe(x => console.log(x));
   }
 
   submit() {

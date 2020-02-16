@@ -1,5 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
+using System.Linq;
+using System.Text;
 
 namespace FileStats.LZW
 {
@@ -26,15 +29,17 @@ namespace FileStats.LZW
 				}
 				else
 				{
-					if (result.Count == ushort.MaxValue)
+					result.Add(dictionary[c]);
+					dictionary.Add(string.Concat(c, s), n);
+
+					if (n == ushort.MaxValue)
 					{
 						dictionary = InitializeEncodeDictionary();
 						n = Convert.ToUInt16(dictionary.Count);
 					}
+					else
+						n++;
 
-					result.Add(dictionary[c]);
-					dictionary.Add(string.Concat(c, s), n);
-					n++;
 					c = s;
 				}
 			}
@@ -43,45 +48,47 @@ namespace FileStats.LZW
 
 			return result;
 		}
-		public static string Decode(List<ushort> data)
+		public static string Decode(IEnumerable<ushort> data)
 		{
+			var builder = new StringBuilder();
 			//step 1
 			var dictionary = InitializeDecodeDictionary();
 			var n = Convert.ToUInt16(dictionary.Count);
 
 			//step 2
-			var pk = data[0];
+			var pk = data.FirstOrDefault();
 
 			//step 3
-			var result = dictionary[pk];
+			builder.Append(dictionary[pk]);
 
 			//step 4
 
-			for (var i = 1; i < data.Count; i++)
+			foreach (var k in data.Skip(1))
 			{
 				var pc = dictionary[pk];
-				var k = data[i];
 
-				if (dictionary.Count == ushort.MaxValue)
+				if (dictionary.ContainsKey(k))
+				{
+					dictionary.Add(n, string.Concat(pc, dictionary[k][0])); 
+					builder.Append(dictionary[k]);
+				}
+				else
+				{
+					dictionary.Add(n, string.Concat(pc, pc[0]));
+					builder.Append(string.Concat(pc, pc[0]));
+				}
+				if (n == ushort.MaxValue)
 				{
 					dictionary = InitializeDecodeDictionary();
 					n = Convert.ToUInt16(dictionary.Count);
 				}
-				if (dictionary.ContainsKey(k))
-				{
-					dictionary.Add(n, string.Concat(pc + dictionary[k][0]));
-					n++;
-					result += dictionary[k];
-				}
 				else
-				{
-					dictionary.Add(n, string.Concat(pc + pc[0]));
 					n++;
-					result += string.Concat(pc + pc[0]);
-				}
+
 				pk = k;
 			}
-			return result;
+
+			return builder.ToString();
 		}
 
 		private static IDictionary<string, ushort> InitializeEncodeDictionary()

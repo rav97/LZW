@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using FileStats.CharacterPresence;
 using FileStats.LZW;
@@ -24,7 +25,12 @@ namespace TIIK.Controllers
 		[HttpPost("api/encode")]
 		public EncodeResponse LzwEncode([FromBody] RequestData request)
 		{
+			var stopWatch = new Stopwatch();
+			stopWatch.Start();
+
 			var encoded = LZW.Encode(request.Data);
+			stopWatch.Stop();
+
 			var inputLength = request.Data.Length;
 			var encodedLength = encoded.Count * 2;
 
@@ -32,8 +38,9 @@ namespace TIIK.Controllers
 			{
 				Encoded = encoded.ConvertAll(x => x.ToString()),
 				InputLength = inputLength,
-				EncodedLength = encoded.Count,
+				EncodedLength = encoded.Count * 2,
 				CompressionRatio = (double) encodedLength / inputLength,
+				ElapsedTime = stopWatch.Elapsed,
 			};
 		}
 
@@ -42,9 +49,16 @@ namespace TIIK.Controllers
 		{
 			var data = request.Data.Split(' ').ToList().ConvertAll(Convert.ToUInt16);
 
+			var stopWatch = new Stopwatch();
+			stopWatch.Start();
+
+			var decodedData = LZW.Decode(data);
+			stopWatch.Stop();
+
 			return new DecodeResponse
 			{
-				Decoded = LZW.Decode(data),
+				Decoded = decodedData,
+				ElapsedTime = stopWatch.Elapsed,
 			};
 		}
 
@@ -76,6 +90,7 @@ namespace TIIK.Controllers
 	public class DecodeResponse
 	{
 		public string Decoded { get; set; }
+		public TimeSpan ElapsedTime { get; set; }
 	}
 
 	public class EncodeResponse
@@ -84,5 +99,6 @@ namespace TIIK.Controllers
 		public double CompressionRatio { get; set; }
 		public int InputLength { get; set; }
 		public int EncodedLength { get; set; }
+		public TimeSpan ElapsedTime { get; set; }
 	}
 }

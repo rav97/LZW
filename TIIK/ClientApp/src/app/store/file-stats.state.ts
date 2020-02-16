@@ -11,6 +11,7 @@ interface IFileStatsStateModel {
     compressionRatio: number;
     inputLength: number;
     encodedLength: number;
+    elapsedTime: string;
 }
 
 const defaultState: IFileStatsStateModel = {
@@ -22,6 +23,7 @@ const defaultState: IFileStatsStateModel = {
     compressionRatio: undefined,
     inputLength: undefined,
     encodedLength: undefined,
+    elapsedTime: undefined,
 };
 
 @State<IFileStatsStateModel>({
@@ -60,6 +62,11 @@ export class FileStatsState {
         return state.encodedLength;
     }
 
+    @Selector()
+    static elapsedTime(state: IFileStatsStateModel): string {
+        return state.elapsedTime;
+    }
+
     constructor(private httpClient: HttpClient, @Inject('BASE_URL') private baseUrl: string) { }
 
     @Action(GetCharacterPresenceData)
@@ -75,7 +82,8 @@ export class FileStatsState {
 
     @Action(LzwEncode)
     lzwEncode(ctx: StateContext<IFileStatsStateModel>, action: LzwEncode) {
-        return this.httpClient.post<{ encoded: string[], compressionRatio: number, inputLength: number, encodedLength: number }>
+        return this.httpClient.post<{ encoded: string[], compressionRatio: number, inputLength: number, encodedLength: number,
+            elapsedTime: string }>
             (this.baseUrl + 'api/encode', { data: action.text }).pipe(
                 tap(x => {
                     return ctx.patchState({
@@ -83,6 +91,7 @@ export class FileStatsState {
                         compressionRatio: x.compressionRatio,
                         encodedLength: x.encodedLength,
                         inputLength: x.inputLength,
+                        elapsedTime: x.elapsedTime,
                     });
                 })
             );
@@ -90,13 +99,14 @@ export class FileStatsState {
 
     @Action(LzwDecode)
     LzwDecode(ctx: StateContext<IFileStatsStateModel>, action: LzwDecode) {
-        return this.httpClient.post<{ decoded: string }>(this.baseUrl + 'api/decode', { data: action.text }).pipe(
+        return this.httpClient.post<{ decoded: string, elapsedTime: string }>(this.baseUrl + 'api/decode', { data: action.text }).pipe(
             tap(x => {
                 return ctx.patchState({
                     lzwResult: x.decoded,
                     compressionRatio: undefined,
                     encodedLength: undefined,
                     inputLength: undefined,
+                    elapsedTime: x.elapsedTime,
                 });
             }),
         );
